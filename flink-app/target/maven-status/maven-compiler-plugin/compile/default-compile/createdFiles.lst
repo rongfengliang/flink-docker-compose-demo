@@ -1,0 +1,6 @@
+com/dalong/app/StreamingJob.class
+com/dalong/app/BatchJob$Word.class
+com/dalong/app/util/WordCountData.class
+com/dalong/app/BatchJob$1.class
+com/dalong/app/BatchJob$Tokenizer.class
+com/dalong/app/BatchJob.class

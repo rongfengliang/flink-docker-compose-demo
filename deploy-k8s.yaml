@@ -44,6 +44,14 @@ spec:
     targetPort: 6123
     protocol: TCP
     name: rpc
+  - port: 6124
+    targetPort: 6124
+    protocol: TCP
+    name: blob
+  - port: 6125
+    targetPort: 6125
+    protocol: TCP
+    name: query
   selector:
     app: jobmanager
 
