@@ -1,0 +1,93 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:  
+  name: jobmanager
+  namespace: big-data
+  labels:
+    app: jobmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jobmanager
+    spec:
+      containers:
+      - name: jobmanager
+        image:  flink
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort:  6123
+        - containerPort:  8081
+        args: ["jobmanager"]
+        env:
+        - name: JOB_MANAGER_RPC_ADDRESS
+          value: jobmanager
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobmanager
+  namespace: big-data
+  labels:
+    app: jobmanager
+spec:
+  type: NodePort
+  ports:
+  - port: 8081
+    targetPort: 8081
+    protocol: TCP
+    name: http
+  - port: 6123
+    targetPort: 6123
+    protocol: TCP
+    name: rpc
+  selector:
+    app: jobmanager
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jobmanager
+  namespace: big-data
+spec:
+  rules:
+  - host: flink.data.com
+    http:
+      paths:
+      - backend:
+          serviceName: jobmanager
+          servicePort: 8081
+        path: /
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:  
+  name: taskmanager
+  namespace: big-data
+  labels:
+    app: taskmanager
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: taskmanager
+    spec:
+      containers:
+      - name: taskmanager
+        image:  flink
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort:  6121
+        - containerPort:  6122
+        args: ["taskmanager"]
+        env:
+        - name: JOB_MANAGER_RPC_ADDRESS
+          value: jobmanager

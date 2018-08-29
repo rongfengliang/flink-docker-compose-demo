@@ -17,3 +17,8 @@ mvn clean package
 
 * submit job(use ui)
 
+## Run with k8s
+
+```code
+kubectl apply -f deploy-k8s.yaml
+```
